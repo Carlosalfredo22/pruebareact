@@ -1,38 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { obtenerUsuarios } from '../services/userService';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { httpClient } from '../api/HttpClient';
 
-const Dashboard = () => {
+function Dashboard() {
   const [usuarios, setUsuarios] = useState([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Verificar si el token está presente en localStorage
     const token = localStorage.getItem('token');
-    console.log('Token en localStorage:', token); // Para depuración
-
+    console.log('Token en header:', token); // Asegúrate de que el token está presente
     if (!token) {
-      // Si no hay token, mostrar un mensaje de error o redirigir al login
+      navigate('/login'); // Redirigir al login si no hay token
       setError('No hay token de autenticación. Por favor, inicia sesión.');
-      return; // Detener la ejecución del useEffect si no hay token
+      return;
     }
 
-    // Si hay token, continuar con la solicitud a la API
-    obtenerUsuarios()
-      .then(response => setUsuarios(response.data))
-      .catch(err => {
-        console.error('Error al obtener usuarios:', err);
-        // Mejor manejo de errores
-        const errorMessage = err.response ? err.response.data.message : 'Error al obtener usuarios';
-        setError(errorMessage);
-      });
-  }, []); // Este efecto solo se ejecuta una vez al montar el componente
+  // Hacer la solicitud solo si hay un token
+  httpClient.get('/user')
+    .then(response => {
+      console.log('Respuesta de la API:', response); // Ver la respuesta completa
+      const usuario = response.data.user;  // Aquí accedemos a 'user'
+      setUsuarios([usuario]);  // Lo convertimos en un arreglo para poder mapearlo
+    })
+    .catch(err => {
+      console.error('Error al obtener usuarios:', err);
+      setError('Error al obtener usuarios');
+    });
+}, [navigate]);
 
   if (error) {
-    return <p>{error}</p>; // Mostrar mensaje de error si hay
+    return <p>{error}</p>;
   }
 
   if (!usuarios.length) {
-    return <p>Cargando usuarios...</p>; // Mostrar mensaje mientras se cargan los usuarios
+    return <p>Cargando usuarios...</p>;
   }
 
   return (
@@ -45,6 +47,6 @@ const Dashboard = () => {
       </ul>
     </div>
   );
-};
+}
 
 export default Dashboard;

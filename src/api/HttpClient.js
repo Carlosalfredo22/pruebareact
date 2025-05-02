@@ -16,6 +16,7 @@ httpClient.interceptors.request.use(
   config => {
     // Puedes agregar token automáticamente si existe
     const token = localStorage.getItem('token');
+    console.log('Token usado en header:', token); // 👈
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
