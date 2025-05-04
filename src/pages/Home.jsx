@@ -1,13 +1,17 @@
 import React from 'react';
-import '../style/Home.css'; // La ruta correcta a tu archivo CSS
+import Navbar from '../components/Navbar';
+import '../style/Home.css';
 
 function Home() {
   return (
     <div className="home-container">
-      <h1 className="home-title">Bienvenido a la página de Inicio</h1>
-      <p className="home-text">Esta es la página principal de nuestra aplicación.</p>
-      <p className="home-subtext">Prueba de que funciona BrowserRouter correctamente.Hola</p>
+      <Navbar />
+      <div className="home-content">
+        <h1 className="home-title">Bienvenido a la Página de Inicio</h1>
+        <p className="home-text">Has iniciado sesión correctamente.</p>
+      </div>
     </div>
   );
 }
+
 export default Home;

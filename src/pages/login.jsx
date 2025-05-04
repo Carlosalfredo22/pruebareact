@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { httpClient } from '../api/HttpClient'; // Asegúrate de tener configurado el httpClient
-import '../style/Login.css';  // Importando el archivo CSS
+import { httpClient } from '../api/HttpClient'; // Asegúrate de que esto esté bien configurado
+import '../style/Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,14 +13,13 @@ function Login() {
     e.preventDefault();
 
     try {
-        const response = await httpClient.post('/login', { email, password });
-        console.log('Respuesta completa del login:', response.data);
+      const response = await httpClient.post('/login', { email, password });
+      console.log('Respuesta del login:', response.data);
 
-      // Guardar el token en localStorage
       localStorage.setItem('token', response.data.access_token);
 
-      // Redirigir al Dashboard
-      navigate('/dashboard');
+      // Redirigir al Home
+      navigate('/');
     } catch (err) {
       console.error('Error al iniciar sesión:', err);
       setError('Credenciales incorrectas o error en el servidor.');

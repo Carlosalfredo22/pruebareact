@@ -1,10 +1,15 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
+import '../style/Home.css';
 
 function About() {
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Acerca de Nosotros</h1>
-      <p>Esta es la página donde hablamos sobre nuestra empresa o proyecto.</p>
+    <div className="home-container">
+      <Navbar />
+      <div className="home-content">
+        <h1 className="home-title">Acerca de</h1>
+        <p className="home-text">Esta es la sección Acerca de nuestra aplicación.</p>
+      </div>
     </div>
   );
 }
