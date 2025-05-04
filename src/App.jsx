@@ -4,6 +4,8 @@ import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/login';
 import Categorias from './pages/Categorias'; // Importar la nueva página de Categorías
+import MetodosPago from './pages/MetodosPago';
+import Productos from './pages/Productos';  // Este es el componente de productos que vimos antes
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Categorias" element={<Categorias />} />    {/* Ruta para categorías */}
+        <Route path="/metodos-pago" element={<MetodosPago />} />
+        <Route path="/productos" element={<Productos />} />
       </Routes>
     </BrowserRouter>
   );
