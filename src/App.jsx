@@ -6,6 +6,9 @@ import Login from './pages/login';
 import Categorias from './pages/Categorias'; // Importar la nueva página de Categorías
 import MetodosPago from './pages/MetodosPago';
 import Productos from './pages/Productos';  // Este es el componente de productos que vimos antes
+import Pagos from './pages/Pagos';
+import DetallesPedido from './pages/DetallesPedido';
+import Pedidos from './pages/Pedidos';
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
         <Route path="/Categorias" element={<Categorias />} />    {/* Ruta para categorías */}
         <Route path="/metodos-pago" element={<MetodosPago />} />
         <Route path="/productos" element={<Productos />} />
+        <Route path="/pagos" element={<Pagos />} />
+        <Route path="/detalles-pedido" element={<DetallesPedido />} />
+        <Route path="/pedidos" element={<Pedidos />} />
       </Routes>
     </BrowserRouter>
   );
