@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';       // Importa el Navbar
-import '../style/Home.css';                      // Aplica los estilos globales (si aplica)
+import Navbar from '../components/Navbar';
+import '../style/Home.css';
 
 function Categorias() {
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Estado para el formulario
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [formError, setFormError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   useEffect(() => {
+    fetchCategorias();
+  }, []);
+
+  const fetchCategorias = () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -34,13 +44,83 @@ function Categorias() {
         setError('Error al cargar las categorías');
         setLoading(false);
       });
-  }, []);
+  };
+
+  // Manejador del formulario
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormError('');
+    setSuccessMessage('');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setFormError('No estás autenticado');
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post(
+        'http://localhost:8000/api/categorias',
+        {
+          nombre,
+          descripcion,
+        },
+        config
+      )
+      .then((response) => {
+        setSuccessMessage('Categoría registrada exitosamente.');
+        setNombre('');
+        setDescripcion('');
+        fetchCategorias(); // Refresca la lista
+      })
+      .catch((error) => {
+        if (error.response && error.response.data.errors) {
+          // Laravel 422 con errores de validación
+          const mensaje = error.response.data.errors.nombre?.[0] || 'Error al registrar categoría';
+          setFormError(mensaje);
+        } else {
+          setFormError('Error al registrar categoría');
+        }
+      });
+  };
 
   return (
     <div>
-      <Navbar /> {/* Muestra la barra de navegación */}
-      <div className="container"> {/* puedes definir este estilo en Home.css */}
+      <Navbar />
+      <div className="container">
         <h1>Categorías</h1>
+
+        {/* Formulario */}
+        <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+          <div>
+            <label>Nombre:</label>
+            <input
+              type="text"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+              maxLength={100}
+            />
+          </div>
+          <div>
+            <label>Descripción:</label>
+            <input
+              type="text"
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+            />
+          </div>
+          <button type="submit">Guardar Categoría</button>
+
+          {formError && <p style={{ color: 'red' }}>{formError}</p>}
+          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        </form>
 
         {loading && <p>Cargando...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
