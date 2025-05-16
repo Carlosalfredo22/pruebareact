@@ -14,9 +14,22 @@ function MetodosPago() {
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const [editandoId, setEditandoId] = useState(null);
+  const [editNombre, setEditNombre] = useState('');
+  const [editDescripcion, setEditDescripcion] = useState('');
+
   useEffect(() => {
     fetchMetodosPago();
   }, []);
+
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  };
 
   const fetchMetodosPago = () => {
     const token = localStorage.getItem('token');
@@ -27,14 +40,8 @@ function MetodosPago() {
       return;
     }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     axios
-      .get('http://localhost:8000/api/metodos-pago', config)
+      .get('http://localhost:8000/api/metodos-pago', getAuthConfig())
       .then((response) => {
         setMetodos(response.data);
         setLoading(false);
@@ -52,17 +59,15 @@ function MetodosPago() {
     setSuccessMessage('');
 
     const token = localStorage.getItem('token');
-
     if (!token) {
       setFormError('No estás autenticado');
       return;
     }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    if (nombre.trim() === '') {
+      setFormError('El nombre es obligatorio');
+      return;
+    }
 
     axios
       .post(
@@ -71,7 +76,7 @@ function MetodosPago() {
           nombre,
           descripcion,
         },
-        config
+        getAuthConfig()
       )
       .then((response) => {
         setSuccessMessage('Método de pago registrado correctamente.');
@@ -86,6 +91,59 @@ function MetodosPago() {
         } else {
           setFormError('Error al registrar método de pago');
         }
+      });
+  };
+
+  const handleDelete = (id) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('No estás autenticado');
+      return;
+    }
+
+    if (!window.confirm('¿Estás seguro de eliminar este método de pago?')) return;
+
+    axios
+      .delete(`http://localhost:8000/api/metodos-pago/${id}`, getAuthConfig())
+      .then(() => {
+        fetchMetodosPago();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Error al eliminar el método de pago');
+      });
+  };
+
+  const iniciarEdicion = (metodo) => {
+    setEditandoId(metodo.id);
+    setEditNombre(metodo.nombre);
+    setEditDescripcion(metodo.descripcion || '');
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('No estás autenticado');
+      return;
+    }
+
+    axios
+      .put(
+        `http://localhost:8000/api/metodos-pago/${editandoId}`,
+        {
+          nombre: editNombre,
+          descripcion: editDescripcion,
+        },
+        getAuthConfig()
+      )
+      .then(() => {
+        setEditandoId(null);
+        fetchMetodosPago();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Error al actualizar el método de pago');
       });
   };
 
@@ -121,6 +179,7 @@ function MetodosPago() {
           {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
         </form>
 
+        {/* Lista */}
         {loading && <p>Cargando...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -138,8 +197,30 @@ function MetodosPago() {
                     marginBottom: '10px',
                   }}
                 >
-                  <div style={{ fontWeight: 'bold' }}>{metodo.nombre}</div>
-                  <div style={{ color: 'green' }}>{metodo.descripcion}</div>
+                  {editandoId === metodo.id ? (
+                    <form onSubmit={handleUpdate}>
+                      <input
+                        type="text"
+                        value={editNombre}
+                        onChange={(e) => setEditNombre(e.target.value)}
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={editDescripcion}
+                        onChange={(e) => setEditDescripcion(e.target.value)}
+                      />
+                      <button type="submit">Guardar</button>
+                      <button type="button" onClick={() => setEditandoId(null)}>Cancelar</button>
+                    </form>
+                  ) : (
+                    <>
+                      <div style={{ fontWeight: 'bold' }}>{metodo.nombre}</div>
+                      <div style={{ color: 'green' }}>{metodo.descripcion}</div>
+                      <button onClick={() => iniciarEdicion(metodo)}>Editar</button>{' '}
+                      <button onClick={() => handleDelete(metodo.id)}>Eliminar</button>
+                    </>
+                  )}
                 </li>
               ))
             ) : (

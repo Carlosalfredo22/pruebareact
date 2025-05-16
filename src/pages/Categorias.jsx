@@ -8,15 +8,27 @@ function Categorias() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estado para el formulario
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const [editandoId, setEditandoId] = useState(null);
+  const [editNombre, setEditNombre] = useState('');
+  const [editDescripcion, setEditDescripcion] = useState('');
+
   useEffect(() => {
     fetchCategorias();
   }, []);
+
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  };
 
   const fetchCategorias = () => {
     const token = localStorage.getItem('token');
@@ -27,14 +39,8 @@ function Categorias() {
       return;
     }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     axios
-      .get('http://localhost:8000/api/categorias', config)
+      .get('http://localhost:8000/api/categorias', getAuthConfig())
       .then((response) => {
         setCategorias(response.data);
         setLoading(false);
@@ -46,7 +52,6 @@ function Categorias() {
       });
   };
 
-  // Manejador del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormError('');
@@ -58,11 +63,10 @@ function Categorias() {
       return;
     }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    if (nombre.trim() === '') {
+      setFormError('El nombre es obligatorio');
+      return;
+    }
 
     axios
       .post(
@@ -71,22 +75,75 @@ function Categorias() {
           nombre,
           descripcion,
         },
-        config
+        getAuthConfig()
       )
       .then((response) => {
         setSuccessMessage('Categoría registrada exitosamente.');
         setNombre('');
         setDescripcion('');
-        fetchCategorias(); // Refresca la lista
+        fetchCategorias();
       })
       .catch((error) => {
-        if (error.response && error.response.data.errors) {
-          // Laravel 422 con errores de validación
+        console.error('Error al registrar categoría:', error.response?.data || error);
+        if (error.response?.data?.errors) {
           const mensaje = error.response.data.errors.nombre?.[0] || 'Error al registrar categoría';
           setFormError(mensaje);
         } else {
           setFormError('Error al registrar categoría');
         }
+      });
+  };
+
+  const handleDelete = (id) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('No estás autenticado');
+      return;
+    }
+
+    if (!window.confirm('¿Estás seguro de eliminar esta categoría?')) return;
+
+    axios
+      .delete(`http://localhost:8000/api/categorias/${id}`, getAuthConfig())
+      .then(() => {
+        fetchCategorias();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Error al eliminar la categoría');
+      });
+  };
+
+  const iniciarEdicion = (categoria) => {
+    setEditandoId(categoria.id);
+    setEditNombre(categoria.nombre);
+    setEditDescripcion(categoria.descripcion || '');
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('No estás autenticado');
+      return;
+    }
+
+    axios
+      .put(
+        `http://localhost:8000/api/categorias/${editandoId}`,
+        {
+          nombre: editNombre,
+          descripcion: editDescripcion,
+        },
+        getAuthConfig()
+      )
+      .then(() => {
+        setEditandoId(null);
+        fetchCategorias();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Error al actualizar la categoría');
       });
   };
 
@@ -96,7 +153,7 @@ function Categorias() {
       <div className="container">
         <h1>Categorías</h1>
 
-        {/* Formulario */}
+        {/* Formulario de creación */}
         <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
           <div>
             <label>Nombre:</label>
@@ -122,6 +179,7 @@ function Categorias() {
           {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
         </form>
 
+        {/* Lista */}
         {loading && <p>Cargando...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -138,8 +196,30 @@ function Categorias() {
                   borderRadius: '8px',
                 }}
               >
-                <p style={{ margin: 0, fontWeight: 'bold' }}>{categoria.nombre}</p>
-                <p style={{ margin: 0, color: '#555' }}>{categoria.descripcion}</p>
+                {editandoId === categoria.id ? (
+                  <form onSubmit={handleUpdate}>
+                    <input
+                      type="text"
+                      value={editNombre}
+                      onChange={(e) => setEditNombre(e.target.value)}
+                      required
+                    />
+                    <input
+                      type="text"
+                      value={editDescripcion}
+                      onChange={(e) => setEditDescripcion(e.target.value)}
+                    />
+                    <button type="submit">Guardar</button>
+                    <button type="button" onClick={() => setEditandoId(null)}>Cancelar</button>
+                  </form>
+                ) : (
+                  <>
+                    <p style={{ margin: 0, fontWeight: 'bold' }}>{categoria.nombre}</p>
+                    <p style={{ margin: 0, color: '#555' }}>{categoria.descripcion}</p>
+                    <button onClick={() => iniciarEdicion(categoria)}>Editar</button>{' '}
+                    <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
+                  </>
+                )}
               </li>
             ))}
           </ul>
