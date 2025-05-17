@@ -1,0 +1,165 @@
+/* Reset y base */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+/* Logo */
+.logo {
+    height: 50px;
+}
+
+/* Navbar (usando Bootstrap override si es necesario) */
+.navbar {
+    background-color: #333 !important;
+    padding: 0.75rem 1rem;
+}
+.navbar .nav-link {
+    color: white !important;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+.navbar .nav-link:hover {
+    background-color: #555;
+}
+.navbar .btn-outline-secondary i {
+    font-size: 1.4rem;
+}
+
+/* Carrusel */
+.carousel {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    max-height: 400px;
+    margin-top: 10px;
+}
+.carousel-container {
+    position: relative;
+    height: 400px;
+}
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    object-fit: cover;
+}
+.slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Banner */
+.banner {
+    background-color: #eee;
+    text-align: center;
+    padding: 60px 20px;
+}
+.title-banner {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+.btn-banner {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.btn-banner:hover {
+    background-color: #555;
+}
+
+/* Artículo y galería */
+.article {
+    padding: 40px 20px;
+    text-align: center;
+}
+.title-article {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+.paragraph-article {
+    margin-bottom: 30px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.galery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+.box-galery {
+    width: 220px;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.box-img img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+.btn-img {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #444;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.btn-img:hover {
+    background-color: #666;
+}
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+.footer p {
+    margin: 5px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar .nav-link {
+        padding: 12px;
+        text-align: center;
+    }
+
+    .banner, .article {
+        padding: 30px 15px;
+    }
+
+    .galery {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .box-galery {
+        width: 80%;
+    }
+
+    .title-banner {
+        font-size: 1.5em;
+    }
+}

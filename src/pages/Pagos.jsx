@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import '../style/Home.css';
+import Footer from '../components/Footer';
+import '../style/Pagos.css';
 
 function Pagos() {
   const [pagos, setPagos] = useState([]);
-  const [pedidos, setPedidos] = useState([]); // Estado para los pedidos
+  const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,7 +26,7 @@ function Pagos() {
 
   useEffect(() => {
     fetchPagos();
-    fetchPedidos(); // Obtener los pedidos
+    fetchPedidos();
   }, []);
 
   const getAuthConfig = () => {
@@ -66,7 +67,7 @@ function Pagos() {
     }
 
     axios
-      .get('http://localhost:8000/api/pedidos', getAuthConfig()) // Asegúrate de que esta URL devuelva los pedidos
+      .get('http://localhost:8000/api/pedidos', getAuthConfig())
       .then((response) => {
         setPedidos(response.data);
       })
@@ -87,12 +88,16 @@ function Pagos() {
       return;
     }
 
-    if (pedidoId.trim() === '' || monto.trim() === '' || estado.trim() === '' || fechaPago.trim() === '') {
+    if (
+      pedidoId.trim() === '' ||
+      monto.trim() === '' ||
+      estado.trim() === '' ||
+      fechaPago.trim() === ''
+    ) {
       setFormError('Todos los campos son obligatorios');
       return;
     }
 
-    // Ajustando los datos a enviar
     const data = {
       pedido_id: pedidoId,
       monto: parseFloat(monto),
@@ -101,18 +106,14 @@ function Pagos() {
     };
 
     axios
-      .post(
-        'http://localhost:8000/api/pagos',
-        data,
-        getAuthConfig()
-      )
-      .then((response) => {
+      .post('http://localhost:8000/api/pagos', data, getAuthConfig())
+      .then(() => {
         setSuccessMessage('Pago registrado correctamente.');
         setPedidoId('');
         setMonto('');
         setEstado('');
         setFechaPago('');
-        fetchPagos(); // Recargar la lista
+        fetchPagos();
       })
       .catch((error) => {
         console.error(error);
@@ -156,7 +157,6 @@ function Pagos() {
       return;
     }
 
-    // Ajustando los datos a enviar
     const data = {
       pedido_id: editPedidoId,
       monto: parseFloat(editMonto),
@@ -165,11 +165,7 @@ function Pagos() {
     };
 
     axios
-      .put(
-        `http://localhost:8000/api/pagos/${editandoId}`,
-        data,
-        getAuthConfig()
-      )
+      .put(`http://localhost:8000/api/pagos/${editandoId}`, data, getAuthConfig())
       .then(() => {
         setEditandoId(null);
         fetchPagos();
@@ -183,12 +179,12 @@ function Pagos() {
   return (
     <div>
       <Navbar />
-      <div className="container">
+      <div className="container pagos-container">
         <h1>Pagos</h1>
 
         {/* Formulario de registro */}
-        <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-          <div>
+        <form onSubmit={handleSubmit} className="formulario-pagos">
+          <div className="form-group">
             <label>Pedido ID:</label>
             <select
               value={pedidoId}
@@ -203,7 +199,7 @@ function Pagos() {
               ))}
             </select>
           </div>
-          <div>
+          <div className="form-group">
             <label>Monto:</label>
             <input
               type="number"
@@ -212,7 +208,7 @@ function Pagos() {
               required
             />
           </div>
-          <div>
+          <div className="form-group">
             <label>Estado:</label>
             <input
               type="text"
@@ -221,7 +217,7 @@ function Pagos() {
               required
             />
           </div>
-          <div>
+          <div className="form-group">
             <label>Fecha de Pago:</label>
             <input
               type="datetime-local"
@@ -230,32 +226,25 @@ function Pagos() {
               required
             />
           </div>
-          <button type="submit">Registrar Pago</button>
+          <button type="submit" className="btn-registrar">
+            Registrar Pago
+          </button>
 
-          {formError && <p style={{ color: 'red' }}>{formError}</p>}
-          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          {formError && <p className="error-msg">{formError}</p>}
+          {successMessage && <p className="success-msg">{successMessage}</p>}
         </form>
 
         {/* Lista de pagos */}
         {loading && <p>Cargando...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error-msg">{error}</p>}
 
         {!loading && !error && (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul className="lista-pagos">
             {pagos.length > 0 ? (
               pagos.map((pago) => (
-                <li
-                  key={pago.id}
-                  style={{
-                    padding: '12px',
-                    backgroundColor: '#f5f5f5',
-                    border: '1px solid #ddd',
-                    borderRadius: '6px',
-                    marginBottom: '10px',
-                  }}
-                >
+                <li key={pago.id} className="pago-item">
                   {editandoId === pago.id ? (
-                    <form onSubmit={handleUpdate}>
+                    <form onSubmit={handleUpdate} className="form-editar-pago">
                       <select
                         value={editPedidoId}
                         onChange={(e) => setEditPedidoId(e.target.value)}
@@ -286,17 +275,44 @@ function Pagos() {
                         onChange={(e) => setEditFechaPago(e.target.value)}
                         required
                       />
-                      <button type="submit">Guardar</button>
-                      <button type="button" onClick={() => setEditandoId(null)}>Cancelar</button>
+                      <button type="submit" className="btn-guardar">
+                        Guardar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditandoId(null)}
+                        className="btn-cancelar"
+                      >
+                        Cancelar
+                      </button>
                     </form>
                   ) : (
                     <>
-                      <div><strong>Pedido ID:</strong> {pago.pedido_id}</div>
-                      <div><strong>Monto:</strong> ${pago.monto}</div>
-                      <div><strong>Estado:</strong> {pago.estado}</div>
-                      <div><strong>Fecha de Pago:</strong> {new Date(pago.fecha_pago).toLocaleString()}</div>
-                      <button onClick={() => iniciarEdicion(pago)}>Editar</button>{' '}
-                      <button onClick={() => handleDelete(pago.id)}>Eliminar</button>
+                      <div>
+                        <strong>Pedido ID:</strong> {pago.pedido_id}
+                      </div>
+                      <div>
+                        <strong>Monto:</strong> ${pago.monto}
+                      </div>
+                      <div>
+                        <strong>Estado:</strong> {pago.estado}
+                      </div>
+                      <div>
+                        <strong>Fecha de Pago:</strong>{' '}
+                        {new Date(pago.fecha_pago).toLocaleString()}
+                      </div>
+                      <button
+                        onClick={() => iniciarEdicion(pago)}
+                        className="btn-guardar"
+                      >
+                        Editar
+                      </button>{' '}
+                      <button
+                        onClick={() => handleDelete(pago.id)}
+                        className="btn-cancelar"
+                      >
+                        Eliminar
+                      </button>
                     </>
                   )}
                 </li>
@@ -307,6 +323,7 @@ function Pagos() {
           </ul>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

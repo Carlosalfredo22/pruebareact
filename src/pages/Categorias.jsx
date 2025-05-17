@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import '../style/Home.css';
+import Footer from '../components/Footer';
+import '../style/Categorias.css';
 
 function Categorias() {
   const [categorias, setCategorias] = useState([]);
@@ -32,7 +33,6 @@ function Categorias() {
 
   const fetchCategorias = () => {
     const token = localStorage.getItem('token');
-
     if (!token) {
       setError('No estás autenticado');
       setLoading(false);
@@ -57,12 +57,6 @@ function Categorias() {
     setFormError('');
     setSuccessMessage('');
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setFormError('No estás autenticado');
-      return;
-    }
-
     if (nombre.trim() === '') {
       setFormError('El nombre es obligatorio');
       return;
@@ -71,13 +65,10 @@ function Categorias() {
     axios
       .post(
         'http://localhost:8000/api/categorias',
-        {
-          nombre,
-          descripcion,
-        },
+        { nombre, descripcion },
         getAuthConfig()
       )
-      .then((response) => {
+      .then(() => {
         setSuccessMessage('Categoría registrada exitosamente.');
         setNombre('');
         setDescripcion('');
@@ -95,19 +86,11 @@ function Categorias() {
   };
 
   const handleDelete = (id) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('No estás autenticado');
-      return;
-    }
-
     if (!window.confirm('¿Estás seguro de eliminar esta categoría?')) return;
 
     axios
       .delete(`http://localhost:8000/api/categorias/${id}`, getAuthConfig())
-      .then(() => {
-        fetchCategorias();
-      })
+      .then(() => fetchCategorias())
       .catch((err) => {
         console.error(err);
         setError('Error al eliminar la categoría');
@@ -122,19 +105,10 @@ function Categorias() {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('No estás autenticado');
-      return;
-    }
-
     axios
       .put(
         `http://localhost:8000/api/categorias/${editandoId}`,
-        {
-          nombre: editNombre,
-          descripcion: editDescripcion,
-        },
+        { nombre: editNombre, descripcion: editDescripcion },
         getAuthConfig()
       )
       .then(() => {
@@ -148,13 +122,12 @@ function Categorias() {
   };
 
   return (
-    <div>
+    <div className="home-container d-flex flex-column min-vh-100">
       <Navbar />
-      <div className="container">
-        <h1>Categorías</h1>
+      <div className="home-content categorias-container flex-grow-1">
+        <h1 className="categorias-title">Categorías</h1>
 
-        {/* Formulario de creación */}
-        <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+        <form className="categoria-form" onSubmit={handleSubmit}>
           <div>
             <label>Nombre:</label>
             <input
@@ -173,51 +146,52 @@ function Categorias() {
               onChange={(e) => setDescripcion(e.target.value)}
             />
           </div>
-          <button type="submit">Guardar Categoría</button>
-
-          {formError && <p style={{ color: 'red' }}>{formError}</p>}
-          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          <button type="submit" className="btn guardar">Guardar Categoría</button>
+          {formError && <p className="error">{formError}</p>}
+          {successMessage && <p className="success">{successMessage}</p>}
         </form>
 
-        {/* Lista */}
         {loading && <p>Cargando...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error">{error}</p>}
 
         {!loading && !error && (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul className="categoria-lista">
             {categorias.map((categoria) => (
-              <li
-                key={categoria.id}
-                style={{
-                  padding: '12px',
-                  marginBottom: '10px',
-                  backgroundColor: '#f9f9f9',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                }}
-              >
+              <li className="categoria-item" key={categoria.id}>
                 {editandoId === categoria.id ? (
-                  <form onSubmit={handleUpdate}>
-                    <input
-                      type="text"
-                      value={editNombre}
-                      onChange={(e) => setEditNombre(e.target.value)}
-                      required
-                    />
-                    <input
-                      type="text"
-                      value={editDescripcion}
-                      onChange={(e) => setEditDescripcion(e.target.value)}
-                    />
-                    <button type="submit">Guardar</button>
-                    <button type="button" onClick={() => setEditandoId(null)}>Cancelar</button>
+                  <form className="categoria-form" onSubmit={handleUpdate}>
+                    <div>
+                      <label>Nombre:</label>
+                      <input
+                        type="text"
+                        value={editNombre}
+                        onChange={(e) => setEditNombre(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Descripción:</label>
+                      <input
+                        type="text"
+                        value={editDescripcion}
+                        onChange={(e) => setEditDescripcion(e.target.value)}
+                      />
+                    </div>
+                    <button type="submit" className="btn guardar">Guardar</button>
+                    <button
+                      type="button"
+                      className="btn cancelar"
+                      onClick={() => setEditandoId(null)}
+                    >
+                      Cancelar
+                    </button>
                   </form>
                 ) : (
                   <>
-                    <p style={{ margin: 0, fontWeight: 'bold' }}>{categoria.nombre}</p>
-                    <p style={{ margin: 0, color: '#555' }}>{categoria.descripcion}</p>
-                    <button onClick={() => iniciarEdicion(categoria)}>Editar</button>{' '}
-                    <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
+                    <p><strong>{categoria.nombre}</strong></p>
+                    <p>{categoria.descripcion}</p>
+                    <button className="btn editar" onClick={() => iniciarEdicion(categoria)}>Editar</button>
+                    <button className="btn eliminar" onClick={() => handleDelete(categoria.id)}>Eliminar</button>
                   </>
                 )}
               </li>
@@ -225,6 +199,7 @@ function Categorias() {
           </ul>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import '../style/Home.css';
+import Footer from '../components/Footer';
+import '../style/MetodosPago.css';
 
 function MetodosPago() {
   const [metodos, setMetodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados del formulario
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [formError, setFormError] = useState('');
@@ -33,7 +33,6 @@ function MetodosPago() {
 
   const fetchMetodosPago = () => {
     const token = localStorage.getItem('token');
-
     if (!token) {
       setError('No estás autenticado');
       setLoading(false);
@@ -72,17 +71,14 @@ function MetodosPago() {
     axios
       .post(
         'http://localhost:8000/api/metodos-pago',
-        {
-          nombre,
-          descripcion,
-        },
+        { nombre, descripcion },
         getAuthConfig()
       )
-      .then((response) => {
+      .then(() => {
         setSuccessMessage('Método de pago registrado correctamente.');
         setNombre('');
         setDescripcion('');
-        fetchMetodosPago(); // Recargar la lista
+        fetchMetodosPago();
       })
       .catch((error) => {
         if (error.response?.data?.errors) {
@@ -131,10 +127,7 @@ function MetodosPago() {
     axios
       .put(
         `http://localhost:8000/api/metodos-pago/${editandoId}`,
-        {
-          nombre: editNombre,
-          descripcion: editDescripcion,
-        },
+        { nombre: editNombre, descripcion: editDescripcion },
         getAuthConfig()
       )
       .then(() => {
@@ -148,13 +141,12 @@ function MetodosPago() {
   };
 
   return (
-    <div>
+    <div className="home-container d-flex flex-column min-vh-100">
       <Navbar />
-      <div className="container">
+      <div className="home-content metodos-container flex-grow-1">
         <h1>Métodos de Pago</h1>
 
-        {/* Formulario de registro */}
-        <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+        <form onSubmit={handleSubmit} className="metodo-form">
           <div>
             <label>Nombre:</label>
             <input
@@ -175,28 +167,18 @@ function MetodosPago() {
           </div>
           <button type="submit">Registrar Método</button>
 
-          {formError && <p style={{ color: 'red' }}>{formError}</p>}
-          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          {formError && <p className="error-message">{formError}</p>}
+          {successMessage && <p className="success-message">{successMessage}</p>}
         </form>
 
-        {/* Lista */}
         {loading && <p>Cargando...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
         {!loading && !error && (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul>
             {metodos.length > 0 ? (
               metodos.map((metodo) => (
-                <li
-                  key={metodo.id}
-                  style={{
-                    padding: '12px',
-                    backgroundColor: '#f5f5f5',
-                    border: '1px solid #ddd',
-                    borderRadius: '6px',
-                    marginBottom: '10px',
-                  }}
-                >
+                <li key={metodo.id} className="metodo-item">
                   {editandoId === metodo.id ? (
                     <form onSubmit={handleUpdate}>
                       <input
@@ -215,8 +197,8 @@ function MetodosPago() {
                     </form>
                   ) : (
                     <>
-                      <div style={{ fontWeight: 'bold' }}>{metodo.nombre}</div>
-                      <div style={{ color: 'green' }}>{metodo.descripcion}</div>
+                      <div>{metodo.nombre}</div>
+                      <div>{metodo.descripcion}</div>
                       <button onClick={() => iniciarEdicion(metodo)}>Editar</button>{' '}
                       <button onClick={() => handleDelete(metodo.id)}>Eliminar</button>
                     </>
@@ -229,6 +211,7 @@ function MetodosPago() {
           </ul>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

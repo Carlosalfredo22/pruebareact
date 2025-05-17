@@ -1,29 +1,100 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/login';
-import Categorias from './pages/Categorias'; // Importar la nueva página de Categorías
-import MetodosPago from './pages/MetodosPago';
-import Productos from './pages/Productos';  // Este es el componente de productos que vimos antes
-import Pagos from './pages/Pagos';
-import DetallesPedido from './pages/DetallesPedido';
-import Pedidos from './pages/Pedidos';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/Homepage"; // Página pública
+import HomeAdmin from "./pages/HomeAdmin"; // Importa con el nombre correcto
+import Login from "./pages/login";
+import About from "./pages/About";
+import Dashboard from "./pages/Dashboard";
+import RequireAuth from "./components/RequireAuth";
+import Categorias from "./pages/Categorias";
+import Productos from "./pages/Productos";
+import MetodosPago from "./pages/MetodosPago";
+import Pagos from "./pages/Pagos";
+import Pedidos from "./pages/Pedidos";
+import DetallesPedido from "./pages/DetallesPedidos";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />         {/* Login primero */}
-        <Route path="/" element={<Home />} />               {/* Página principal luego del login */}
-        <Route path="/about" element={<About />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/Categorias" element={<Categorias />} />    {/* Ruta para categorías */}
-        <Route path="/metodos-pago" element={<MetodosPago />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/pagos" element={<Pagos />} />
-        <Route path="/detalles-pedido" element={<DetallesPedido />} />
-        <Route path="/pedidos" element={<Pedidos />} />
+        {/* Homepage pública, sin protección */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Login pública */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Rutas protegidas */}
+        <Route
+          path="/admin"  // cambia aquí la ruta para HomeAdmin
+          element={
+            <RequireAuth>
+              <HomeAdmin />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <RequireAuth>
+              <About />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <RequireAuth>
+              <Dashboard />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/categorias"
+          element={
+            <RequireAuth>
+              <Categorias />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/productos"
+          element={
+            <RequireAuth>
+              <Productos />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/metodos-pago"
+          element={
+            <RequireAuth>
+              <MetodosPago />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/pagos"
+          element={
+            <RequireAuth>
+              <Pagos />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/pedidos"
+          element={
+            <RequireAuth>
+              <Pedidos />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/detalles-pedido"
+          element={
+            <RequireAuth>
+              <DetallesPedido />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

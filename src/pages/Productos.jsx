@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import '../style/Home.css';
+import Footer from '../components/Footer';
+import '../style/Productos.css';
 
 function Productos() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para agregar nuevo producto
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState('');
@@ -19,7 +19,6 @@ function Productos() {
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Estados para editar inline
   const [editandoId, setEditandoId] = useState(null);
   const [editNombre, setEditNombre] = useState('');
   const [editDescripcion, setEditDescripcion] = useState('');
@@ -149,167 +148,66 @@ function Productos() {
       .catch(() => setError('Error al eliminar el producto'));
   };
 
-  if (loading) return <div>Cargando productos...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (loading) return <div className="loading">Cargando productos...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="productos-container">
         <h1>Registrar Producto</h1>
 
-        {/* Formulario para nuevo producto */}
-        <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-          <div>
-            <label>Nombre:</label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              maxLength={100}
-              required
-            />
-          </div>
-
-          <div>
-            <label>Descripción:</label>
-            <input
-              type="text"
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label>Precio:</label>
-            <input
-              type="number"
-              value={precio}
-              onChange={(e) => setPrecio(e.target.value)}
-              min="0"
-              required
-            />
-          </div>
-
-          <div>
-            <label>Stock:</label>
-            <input
-              type="number"
-              value={stock}
-              onChange={(e) => setStock(e.target.value)}
-              min="0"
-              required
-            />
-          </div>
-
-          <div>
-            <label>Categoría:</label>
-            <select
-              value={categoriaId}
-              onChange={(e) => setCategoriaId(e.target.value)}
-              required
-            >
-              <option value="">Seleccionar categoría</option>
-              <option value="1">Ropa</option>
-              <option value="2">Accesorios</option>
-            </select>
-          </div>
-
-          <div>
-            <label>Imagen URL:</label>
-            <input
-              type="text"
-              value={imagenUrl}
-              onChange={(e) => setImagenUrl(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit">Registrar Producto</button>
-
-          {formError && <p style={{ color: 'red' }}>{formError}</p>}
-          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        <form onSubmit={handleSubmit} className="productos-form">
+          <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre" required />
+          <input type="text" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} placeholder="Descripción" />
+          <input type="number" value={precio} onChange={(e) => setPrecio(e.target.value)} placeholder="Precio" min="0" required />
+          <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="Stock" min="0" required />
+          <select value={categoriaId} onChange={(e) => setCategoriaId(e.target.value)} required>
+            <option value="">Seleccionar categoría</option>
+            <option value="1">Ropa</option>
+            <option value="2">Accesorios</option>
+          </select>
+          <input type="text" value={imagenUrl} onChange={(e) => setImagenUrl(e.target.value)} placeholder="URL Imagen" required />
+          <button type="submit">Registrar</button>
         </form>
 
+        {formError && <p className="form-error">{formError}</p>}
+        {successMessage && <p className="form-success">{successMessage}</p>}
+
         <h2>Lista de Productos</h2>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul className="productos-list">
           {productos.length > 0 ? (
             productos.map((producto) => (
-              <li
-                key={producto.id}
-                style={{
-                  padding: '12px',
-                  backgroundColor: '#f5f5f5',
-                  border: '1px solid #ddd',
-                  borderRadius: '6px',
-                  marginBottom: '10px',
-                }}
-              >
+              <li key={producto.id} className="producto-item">
                 {editandoId === producto.id ? (
-                  <form onSubmit={handleUpdate}>
-                    <input
-                      type="text"
-                      value={editNombre}
-                      onChange={(e) => setEditNombre(e.target.value)}
-                      maxLength={100}
-                      required
-                      placeholder="Nombre"
-                    />
-                    <input
-                      type="text"
-                      value={editDescripcion}
-                      onChange={(e) => setEditDescripcion(e.target.value)}
-                      placeholder="Descripción"
-                    />
-                    <input
-                      type="number"
-                      value={editPrecio}
-                      onChange={(e) => setEditPrecio(e.target.value)}
-                      min="0"
-                      required
-                      placeholder="Precio"
-                    />
-                    <input
-                      type="number"
-                      value={editStock}
-                      onChange={(e) => setEditStock(e.target.value)}
-                      min="0"
-                      required
-                      placeholder="Stock"
-                    />
-                    <select
-                      value={editCategoriaId}
-                      onChange={(e) => setEditCategoriaId(e.target.value)}
-                      required
-                    >
+                  <form onSubmit={handleUpdate} className="productos-form edit">
+                    <input type="text" value={editNombre} onChange={(e) => setEditNombre(e.target.value)} placeholder="Nombre" required />
+                    <input type="text" value={editDescripcion} onChange={(e) => setEditDescripcion(e.target.value)} placeholder="Descripción" />
+                    <input type="number" value={editPrecio} onChange={(e) => setEditPrecio(e.target.value)} placeholder="Precio" required />
+                    <input type="number" value={editStock} onChange={(e) => setEditStock(e.target.value)} placeholder="Stock" required />
+                    <select value={editCategoriaId} onChange={(e) => setEditCategoriaId(e.target.value)} required>
                       <option value="">Seleccionar categoría</option>
                       <option value="1">Ropa</option>
                       <option value="2">Accesorios</option>
                     </select>
-                    <input
-                      type="text"
-                      value={editImagenUrl}
-                      onChange={(e) => setEditImagenUrl(e.target.value)}
-                      required
-                      placeholder="URL Imagen"
-                    />
-                    <button type="submit">Guardar</button>{' '}
-                    <button type="button" onClick={() => setEditandoId(null)}>
-                      Cancelar
-                    </button>
+                    <input type="text" value={editImagenUrl} onChange={(e) => setEditImagenUrl(e.target.value)} placeholder="URL Imagen" required />
+                    <div className="action-buttons">
+                      <button type="submit">Guardar</button>
+                      <button type="button" onClick={() => setEditandoId(null)}>Cancelar</button>
+                    </div>
                   </form>
                 ) : (
                   <>
-                    <div style={{ fontWeight: 'bold' }}>{producto.nombre}</div>
+                    <div><strong>{producto.nombre}</strong></div>
                     <div>{producto.descripcion}</div>
                     <div>Precio: ${producto.precio}</div>
                     <div>Stock: {producto.stock}</div>
                     <div>Categoría: {producto.categoria_id === 1 ? 'Ropa' : 'Accesorios'}</div>
-                    <div>
-                      <img src={producto.imagen_url} alt={producto.nombre} style={{ maxWidth: '150px', marginTop: '8px' }} />
+                    <img src={producto.imagen_url} alt={producto.nombre} className="producto-img" />
+                    <div className="action-buttons">
+                      <button onClick={() => iniciarEdicion(producto)}>Editar</button>
+                      <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
                     </div>
-                    <button onClick={() => iniciarEdicion(producto)}>Editar</button>{' '}
-                    <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
                   </>
                 )}
               </li>
@@ -319,6 +217,7 @@ function Productos() {
           )}
         </ul>
       </div>
+      <Footer />
     </>
   );
 }

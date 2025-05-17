@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import '../style/Home.css';
+import Footer from '../components/Footer';
+import '../style/DetallesPedido.css';
 
 function DetallesPedido() {
   const [detalles, setDetalles] = useState([]);
-  const [pedidos, setPedidos] = useState([]); // Para obtener la lista de pedidos
-  const [productos, setProductos] = useState([]); // Para obtener la lista de productos
+  const [pedidos, setPedidos] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados del formulario
   const [pedidoId, setPedidoId] = useState('');
   const [productoId, setProductoId] = useState('');
   const [cantidad, setCantidad] = useState('');
@@ -36,17 +36,31 @@ function DetallesPedido() {
     }
 
     fetchDetallesPedido();
-    fetchProductos(); // Obtener lista de productos
-    fetchPedidos(); // Obtener lista de pedidos
+    fetchProductos();
+    fetchPedidos();
   }, [token]);
 
-  const getAuthConfig = () => {
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-  };
+  useEffect(() => {
+    if (cantidad && precioUnitario) {
+      setSubtotal(Number(cantidad) * Number(precioUnitario));
+    } else {
+      setSubtotal('');
+    }
+  }, [cantidad, precioUnitario]);
+
+  useEffect(() => {
+    if (editCantidad && editPrecioUnitario) {
+      setEditSubtotal(Number(editCantidad) * Number(editPrecioUnitario));
+    } else {
+      setEditSubtotal('');
+    }
+  }, [editCantidad, editPrecioUnitario]);
+
+  const getAuthConfig = () => ({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   const fetchDetallesPedido = () => {
     axios
@@ -55,7 +69,7 @@ function DetallesPedido() {
         setDetalles(res.data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError('Error al cargar los detalles del pedido');
         setLoading(false);
       });
@@ -63,24 +77,16 @@ function DetallesPedido() {
 
   const fetchProductos = () => {
     axios
-      .get('http://localhost:8000/api/productos', getAuthConfig()) // Asegúrate de que esta URL te devuelva productos
-      .then((res) => {
-        setProductos(res.data);
-      })
-      .catch((err) => {
-        setError('Error al cargar productos');
-      });
+      .get('http://localhost:8000/api/productos', getAuthConfig())
+      .then((res) => setProductos(res.data))
+      .catch(() => setError('Error al cargar productos'));
   };
 
   const fetchPedidos = () => {
     axios
-      .get('http://localhost:8000/api/pedidos', getAuthConfig()) // Asegúrate de que esta URL te devuelva los pedidos
-      .then((res) => {
-        setPedidos(res.data);
-      })
-      .catch((err) => {
-        setError('Error al cargar pedidos');
-      });
+      .get('http://localhost:8000/api/pedidos', getAuthConfig())
+      .then((res) => setPedidos(res.data))
+      .catch(() => setError('Error al cargar pedidos'));
   };
 
   const handleSubmit = (e) => {
@@ -88,7 +94,7 @@ function DetallesPedido() {
     setFormError('');
     setSuccessMessage('');
 
-    if (pedidoId.trim() === '' || productoId.trim() === '' || cantidad.trim() === '' || precioUnitario.trim() === '') {
+    if (!pedidoId || !productoId || !cantidad || !precioUnitario) {
       setFormError('Todos los campos son obligatorios');
       return;
     }
@@ -96,9 +102,9 @@ function DetallesPedido() {
     const data = {
       pedido_id: pedidoId,
       producto_id: productoId,
-      cantidad: cantidad,
+      cantidad,
       precio_unitario: precioUnitario,
-      subtotal: cantidad * precioUnitario, // Subtotal calculado
+      subtotal: Number(cantidad) * Number(precioUnitario),
     };
 
     axios
@@ -109,12 +115,10 @@ function DetallesPedido() {
         setProductoId('');
         setCantidad('');
         setPrecioUnitario('');
+        setSubtotal('');
         fetchDetallesPedido();
       })
-      .catch((err) => {
-        console.error(err);
-        setFormError('Error al registrar el detalle del pedido');
-      });
+      .catch(() => setFormError('Error al registrar el detalle del pedido'));
   };
 
   const handleDelete = (id) => {
@@ -122,13 +126,8 @@ function DetallesPedido() {
 
     axios
       .delete(`http://localhost:8000/api/detalles-pedido/${id}`, getAuthConfig())
-      .then(() => {
-        fetchDetallesPedido();
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Error al eliminar el detalle de pedido');
-      });
+      .then(() => fetchDetallesPedido())
+      .catch(() => setError('Error al eliminar el detalle de pedido'));
   };
 
   const iniciarEdicion = (detalle) => {
@@ -148,7 +147,7 @@ function DetallesPedido() {
       producto_id: editProductoId,
       cantidad: editCantidad,
       precio_unitario: editPrecioUnitario,
-      subtotal: editCantidad * editPrecioUnitario, // Subtotal recalculado
+      subtotal: Number(editCantidad) * Number(editPrecioUnitario),
     };
 
     axios
@@ -157,30 +156,22 @@ function DetallesPedido() {
         setEditandoId(null);
         fetchDetallesPedido();
       })
-      .catch((err) => {
-        console.error(err);
-        setError('Error al actualizar el detalle del pedido');
-      });
+      .catch(() => setError('Error al actualizar el detalle del pedido'));
   };
 
-  if (loading) return <div>Cargando detalles...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (loading) return <div className="loading">Cargando detalles...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <>
       <Navbar />
-      <div style={{ padding: '20px' }}>
+      <div className="detalles-container">
         <h1>Detalles del Pedido</h1>
 
-        {/* Formulario de registro */}
-        <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-          <div>
+        <form onSubmit={handleSubmit} className="formulario-detalle">
+          <div className="form-group">
             <label>Pedido:</label>
-            <select
-              value={pedidoId}
-              onChange={(e) => setPedidoId(e.target.value)}
-              required
-            >
+            <select value={pedidoId} onChange={(e) => setPedidoId(e.target.value)} required>
               <option value="">Selecciona un pedido</option>
               {pedidos.map((pedido) => (
                 <option key={pedido.id} value={pedido.id}>
@@ -189,13 +180,10 @@ function DetallesPedido() {
               ))}
             </select>
           </div>
-          <div>
+
+          <div className="form-group">
             <label>Producto:</label>
-            <select
-              value={productoId}
-              onChange={(e) => setProductoId(e.target.value)}
-              required
-            >
+            <select value={productoId} onChange={(e) => setProductoId(e.target.value)} required>
               <option value="">Selecciona un producto</option>
               {productos.map((producto) => (
                 <option key={producto.id} value={producto.id}>
@@ -204,55 +192,47 @@ function DetallesPedido() {
               ))}
             </select>
           </div>
-          <div>
+
+          <div className="form-group">
             <label>Cantidad:</label>
             <input
               type="number"
               value={cantidad}
               onChange={(e) => setCantidad(e.target.value)}
+              min="1"
               required
             />
           </div>
-          <div>
+
+          <div className="form-group">
             <label>Precio Unitario:</label>
             <input
               type="number"
               value={precioUnitario}
               onChange={(e) => setPrecioUnitario(e.target.value)}
+              min="0.01"
+              step="0.01"
               required
             />
           </div>
-          <div>
-            <label>Subtotal:</label>
-            <input
-              type="number"
-              value={subtotal}
-              disabled
-              readOnly
-            />
-          </div>
-          <button type="submit">Registrar Detalle</button>
 
-          {formError && <p style={{ color: 'red' }}>{formError}</p>}
-          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          <div className="form-group">
+            <label>Subtotal:</label>
+            <input type="number" value={subtotal} disabled readOnly />
+          </div>
+
+          <button type="submit" className="btn-registrar">Registrar Detalle</button>
+
+          {formError && <p className="form-error">{formError}</p>}
+          {successMessage && <p className="form-success">{successMessage}</p>}
         </form>
 
-        {/* Lista de detalles del pedido */}
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul className="detalles-list">
           {detalles.length > 0 ? (
             detalles.map((detalle) => (
-              <li
-                key={detalle.id}
-                style={{
-                  backgroundColor: '#f9f9f9',
-                  border: '1px solid #ccc',
-                  borderRadius: '8px',
-                  padding: '10px',
-                  marginBottom: '10px',
-                }}
-              >
+              <li key={detalle.id} className="detalle-item">
                 {editandoId === detalle.id ? (
-                  <form onSubmit={handleUpdate}>
+                  <form onSubmit={handleUpdate} className="form-edit">
                     <select
                       value={editPedidoId}
                       onChange={(e) => setEditPedidoId(e.target.value)}
@@ -265,6 +245,7 @@ function DetallesPedido() {
                         </option>
                       ))}
                     </select>
+
                     <select
                       value={editProductoId}
                       onChange={(e) => setEditProductoId(e.target.value)}
@@ -277,35 +258,64 @@ function DetallesPedido() {
                         </option>
                       ))}
                     </select>
+
                     <input
                       type="number"
                       value={editCantidad}
                       onChange={(e) => setEditCantidad(e.target.value)}
+                      min="1"
                       required
                     />
+
                     <input
                       type="number"
                       value={editPrecioUnitario}
                       onChange={(e) => setEditPrecioUnitario(e.target.value)}
+                      min="0.01"
+                      step="0.01"
                       required
                     />
-                    <input
-                      type="number"
-                      value={editSubtotal}
-                      readOnly
-                    />
-                    <button type="submit">Guardar</button>
-                    <button type="button" onClick={() => setEditandoId(null)}>Cancelar</button>
+
+                    <input type="number" value={editSubtotal} readOnly />
+
+                    <button type="submit" className="btn-editar">Guardar</button>
+                    <button
+                      type="button"
+                      className="btn-cancelar"
+                      onClick={() => setEditandoId(null)}
+                    >
+                      Cancelar
+                    </button>
                   </form>
                 ) : (
                   <>
-                    <p><strong>Pedido:</strong> {`Pedido #${detalle.pedido_id}`}</p>
-                    <p><strong>Producto:</strong> {detalle.producto?.nombre || 'No disponible'}</p>
-                    <p><strong>Cantidad:</strong> {detalle.cantidad}</p>
-                    <p><strong>Precio Unitario:</strong> ${detalle.precio_unitario}</p>
-                    <p><strong>Subtotal:</strong> ${detalle.subtotal}</p>
-                    <button onClick={() => iniciarEdicion(detalle)}>Editar</button>{' '}
-                    <button onClick={() => handleDelete(detalle.id)}>Eliminar</button>
+                    <p>
+                      <strong>Pedido:</strong> {`Pedido #${detalle.pedido_id}`}
+                    </p>
+                    <p>
+                      <strong>Producto:</strong> {detalle.producto?.nombre || 'No disponible'}
+                    </p>
+                    <p>
+                      <strong>Cantidad:</strong> {detalle.cantidad}
+                    </p>
+                    <p>
+                      <strong>Precio Unitario:</strong> ${detalle.precio_unitario}
+                    </p>
+                    <p>
+                      <strong>Subtotal:</strong> ${detalle.subtotal}
+                    </p>
+                    <button
+                      className="btn-editar"
+                      onClick={() => iniciarEdicion(detalle)}
+                    >
+                      Editar
+                    </button>{' '}
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => handleDelete(detalle.id)}
+                    >
+                      Eliminar
+                    </button>
                   </>
                 )}
               </li>
@@ -315,6 +325,7 @@ function DetallesPedido() {
           )}
         </ul>
       </div>
+      <Footer />
     </>
   );
 }

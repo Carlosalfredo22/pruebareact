@@ -1,0 +1,191 @@
+/* Pedidos.css */
+
+.pedidos-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 15px 60px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.pedidos-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* Formulario nuevo pedido */
+.pedidos-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #fefefe;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.pedidos-form select,
+.pedidos-form input[type="number"],
+.pedidos-form input[type="datetime-local"] {
+  flex: 1 1 180px;
+  padding: 10px 12px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.pedidos-form select:focus,
+.pedidos-form input[type="number"]:focus,
+.pedidos-form input[type="datetime-local"]:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 5px #28a745aa;
+}
+
+/* Botón Crear - verde */
+.pedidos-form button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 11px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  flex: 1 1 100px;
+}
+
+.pedidos-form button:hover {
+  background-color: #1e7e34;
+}
+
+/* Lista de pedidos */
+.pedidos-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pedido-item {
+  background-color: #f9f9f9;
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 6px #ccc;
+  border: 1px solid #ddd;
+}
+
+/* Formulario edición pedido */
+.pedido-edit-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pedido-edit-form select,
+.pedido-edit-form input[type="number"],
+.pedido-edit-form input[type="datetime-local"] {
+  flex: 1 1 150px;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.pedido-edit-form select:focus,
+.pedido-edit-form input[type="number"]:focus,
+.pedido-edit-form input[type="datetime-local"]:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 5px #28a745aa;
+}
+
+/* Botón Guardar - verde */
+.btn-guardar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 9px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  flex: 1 1 100px;
+}
+
+.btn-guardar:hover {
+  background-color: #1e7e34;
+}
+
+/* Botón Cancelar - rojo */
+.btn-cancelar {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 9px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  flex: 1 1 100px;
+}
+
+.btn-cancelar:hover {
+  background-color: #b02a37;
+}
+
+/* Botones normales en vista de pedido */
+.pedido-buttons {
+  margin-top: 15px;
+}
+
+.pedido-buttons button {
+  margin-right: 12px;
+  padding: 8px 14px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: #1e7e34;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #b02a37;
+}
+
+/* Mensajes */
+.pedidos-loading,
+.pedidos-error {
+  text-align: center;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 30px;
+}
+
+.pedidos-loading {
+  color: #666;
+}
+
+.pedidos-error {
+  background-color: #f8d7da;
+  color: #842029;
+}

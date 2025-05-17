@@ -1,10 +1,21 @@
+/* Contenedor principal con flex para mantener footer abajo */
 .home-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background-color: #f9f9f9;
   color: #333;
-  min-height: 100vh;
   font-family: Arial, sans-serif;
 }
 
+/* Contenido que crece para empujar el footer */
+.home-content {
+  flex: 1;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Navbar */
 .navbar {
   background-color: #004080;
   padding: 10px 20px;
@@ -28,6 +39,32 @@
   text-decoration: underline;
 }
 
-.home-content {
-  padding: 40px 20px;
+/* Footer */
+.footer {
+  background-color: #222;
+  color: #fff;
+  padding: 25px 20px;
+  text-align: center;
+  margin-top: auto; /* ¡Esto empuja el footer abajo! */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);
 }
+
+.footer-content p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Títulos y textos en home */
+.home-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.home-text {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+
