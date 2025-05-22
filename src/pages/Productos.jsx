@@ -213,7 +213,7 @@ function Productos() {
               </li>
             ))
           ) : (
-            <li>No hay productos disponibles.</li>
+            <li>No hay productos disponibles HOLA.</li>
           )}
         </ul>
       </div>
