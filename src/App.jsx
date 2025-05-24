@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/Homepage"; // Página pública
 import HomeAdmin from "./pages/HomeAdmin"; // Importa con el nombre correcto
+import HomeCliente from "./pages/Clientes/HomeCliente"; // Importa con el nombre correcto
 import Login from "./pages/login";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
@@ -11,6 +12,8 @@ import MetodosPago from "./pages/MetodosPago";
 import Pagos from "./pages/Pagos";
 import Pedidos from "./pages/Pedidos";
 import DetallesPedido from "./pages/DetallesPedidos";
+import NoAutorizando from "./pages/Clientes/NoAutorizando"; // Importa con el nombre correcto
+import RequireAuthCliente from "./components/RequireAuthCliente"; // Importa con el nombre correcto
 
 function App() {
   return (
@@ -93,6 +96,22 @@ function App() {
             <RequireAuth>
               <DetallesPedido />
             </RequireAuth>
+          }
+        />
+        {/* // cambia aquí la ruta para Homecliente */}
+         {/* Rutas protegidas */}
+        <Route
+          path="/cliente"  // cambia aquí la ruta para HomeAdmin
+          element={
+            <RequireAuthCliente>
+              <HomeCliente />
+            </RequireAuthCliente>
+          }
+        />
+        <Route
+          path="/NoAutorizado"  // cambia aquí la ruta para HomeAdmin
+          element={
+              <NoAutorizando  />
           }
         />
       </Routes>

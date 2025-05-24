@@ -23,6 +23,11 @@ function Login() {
     try {
       const response = await httpClient.post('/login', { email, password });
       localStorage.setItem('token', response.data.access_token);
+      if (response.data.role.includes('cliente')) {
+        localStorage.setItem('role', 'cliente');
+        navigate('/cliente', { replace: true });
+        return;
+      }
       navigate(from, { replace: true });
     } catch (err) {
       console.error('Error al iniciar sesión:', err);
