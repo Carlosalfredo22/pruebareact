@@ -14,6 +14,12 @@ import Pedidos from "./pages/Pedidos";
 import DetallesPedido from "./pages/DetallesPedidos";
 import NoAutorizando from "./pages/Clientes/NoAutorizando"; // Importa con el nombre correcto
 import RequireAuthCliente from "./components/RequireAuthCliente"; // Importa con el nombre correcto
+import NavbarCliente from './components/NavbarCliente'; // <-- asegúrate que esté bien
+import CategoriasCliente from './pages/Clientes/CategoriasCliente';
+import ProductosCliente  from './pages/Clientes/ProductosCliente';
+import PedidosCliente from './pages/Clientes/PedidosCliente';
+import PagosCliente from './pages/Clientes/PagosCliente';
+import MetodosPagoCliente from './pages/Clientes/MetodosPagoCliente';
 
 function App() {
   return (
@@ -112,6 +118,46 @@ function App() {
           path="/NoAutorizado"  // cambia aquí la ruta para HomeAdmin
           element={
               <NoAutorizando  />
+          }
+        />
+        <Route
+          path="/cliente/categorias"
+          element={
+            <RequireAuthCliente>
+              <CategoriasCliente />
+            </RequireAuthCliente>
+          }
+        />
+        <Route
+          path="/cliente/productos"
+          element={
+            <RequireAuthCliente>
+              <ProductosCliente />
+            </RequireAuthCliente>
+          }
+        />
+        <Route
+          path="/cliente/pedidos"
+          element={
+            <RequireAuthCliente>
+              <PedidosCliente />
+            </RequireAuthCliente>
+          }
+        />
+        <Route
+          path="/cliente/pagos"
+          element={
+            <RequireAuthCliente>
+              <PagosCliente />
+            </RequireAuthCliente>
+          }
+        />
+        <Route
+          path="/cliente/metodos-pago"
+          element={
+            <RequireAuthCliente>
+              <MetodosPagoCliente />
+            </RequireAuthCliente>
           }
         />
       </Routes>
