@@ -1,0 +1,136 @@
+.pagos-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Formulario */
+.formulario-pagos {
+  margin-bottom: 30px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group select,
+.form-group input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Botones */
+.btn-registrar {
+  background-color: #27ae60 !important; /* verde */
+  color: white !important;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-top: 8px;
+}
+
+.btn-registrar:hover {
+  background-color: #1e8449 !important;
+}
+
+.btn-guardar {
+  background-color: #3498db; /* azul */
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover {
+  background-color: #2980b9;
+}
+
+.btn-cancelar {
+  background-color: #e74c3c; /* rojo */
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #c0392b;
+}
+
+/* Mensajes */
+.error-msg {
+  color: #e74c3c;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.success-msg {
+  color: #27ae60;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* Lista de pagos */
+.lista-pagos {
+  list-style: none;
+  padding: 0;
+}
+
+.pago-item {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+.pago-item > div {
+  margin-bottom: 6px;
+}
+
+.form-editar-pago {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.form-editar-pago select,
+.form-editar-pago input {
+  padding: 6px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1 1 120px;
+  min-width: 120px;
+}

@@ -1,0 +1,198 @@
+.metodos-pago-container {
+  max-width: 700px;
+  width: 90%;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.metodos-pago-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.form-crear,
+.form-editar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.campo-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px #007bff;
+}
+
+/* Botones registrar y editar */
+.btn-registrar,
+.btn-guardar,
+.btn-cancelar,
+.btn-editar,
+.btn-eliminar {
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  padding: 8px 20px;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+/* Registrar botón */
+.btn-registrar {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-start;
+}
+
+.btn-registrar:hover {
+  background-color: #0056b3;
+}
+
+/* Editar Guardar */
+.btn-guardar {
+  background-color: #198754;
+  color: white;
+  padding: 6px 14px;
+}
+
+.btn-guardar:hover {
+  background-color: #146c43;
+}
+
+/* Editar Cancelar */
+.btn-cancelar {
+  background-color: #6c757d;
+  color: white;
+  padding: 6px 14px;
+}
+
+.btn-cancelar:hover {
+  background-color: #565e64;
+}
+
+/* Lista métodos */
+.lista-metodos {
+  list-style: none;
+  padding-left: 0;
+}
+
+.metodo-item {
+  background-color: #fff;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Detalles método */
+.detalle-metodo > div:first-child {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.detalle-metodo > div:first-child span {
+  display: block;
+  font-style: italic;
+  color: #198754;
+  margin-top: 4px;
+}
+
+/* Contenedor botones editar y eliminar */
+.acciones-metodo {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botón editar */
+.btn-editar {
+  background-color: #28a745;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar:hover {
+  background-color: #0a58ca;
+}
+
+/* Botón eliminar */
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #b02a37;
+}
+
+/* Botones editar en formulario de edición */
+.botones-editar {
+  display: flex;
+  gap: 10px;
+}
+
+/* Mensajes */
+.error-msg {
+  color: #dc3545;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #f8d7da;
+}
+
+.success-msg {
+  color: #28a745;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #d1e7dd;
+}
+
+/* Estado vacío */
+.sin-metodos {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}

@@ -33,19 +33,16 @@ function NavbarCliente() {
         <div className="collapse navbar-collapse" id="navbarClienteNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/cliente/categorias">Categorías</Link>
+              <Link className="nav-link" to="/cliente/categorias">Prendas</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/cliente/productos">Productos</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/cliente/pedidos">Pedidos</Link>
-            </li>
-            <li className="nav-item">
               <Link className="nav-link" to="/cliente/pagos">Pagos</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/cliente/metodos-pago">Métodos de Pago</Link>
+              <Link className="nav-link" to="/cliente/metodos-pago">Opciones de Pago</Link>
             </li>
           </ul>
           <ul className="navbar-nav">
