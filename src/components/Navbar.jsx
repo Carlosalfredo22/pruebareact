@@ -17,7 +17,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/admin">Panel Admin</Link>
+        <Link className="navbar-brand" to="/admin">Administrador</Link>
 
         <button
           className="navbar-toggler"
@@ -34,13 +34,13 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/categorias">Categorías</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/metodos-pago">Métodos de Pago</Link>
+              <Link className="nav-link" to="/categorias">Prendas</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/productos">Productos</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/metodos-pago">Opciones de Pagos</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/pagos">Pagos</Link>

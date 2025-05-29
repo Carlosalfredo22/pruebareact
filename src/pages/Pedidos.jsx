@@ -281,7 +281,7 @@ function Pedidos() {
                       className="btn-eliminar"
                       aria-label={`Eliminar pedido ${pedido.id}`}
                     >
-                      Eliminar
+                      Cancelar
                     </button>
                   </div>
                 </>

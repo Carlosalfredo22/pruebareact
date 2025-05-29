@@ -125,7 +125,7 @@ function Categorias() {
     <div className="home-container d-flex flex-column min-vh-100">
       <Navbar />
       <div className="home-content categorias-container flex-grow-1">
-        <h1 className="categorias-title">Categorías</h1>
+        <h1 className="categorias-title">Prendas</h1>
 
         <form className="categoria-form" onSubmit={handleSubmit}>
           <div>
@@ -146,7 +146,7 @@ function Categorias() {
               onChange={(e) => setDescripcion(e.target.value)}
             />
           </div>
-          <button type="submit" className="btn guardar">Guardar Categoría</button>
+          <button type="submit" className="btn guardar">Guardar Prenda</button>
           {formError && <p className="error">{formError}</p>}
           {successMessage && <p className="success">{successMessage}</p>}
         </form>
