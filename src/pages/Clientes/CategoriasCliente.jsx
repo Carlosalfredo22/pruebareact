@@ -119,14 +119,16 @@ function CategoriasCliente() {
 
     const token = localStorage.getItem('token');
     const data = {
+      total: calcularTotal(),
       productos: carrito.map(item => ({
         producto_id: item.categoria.id,
-        cantidad: item.cantidad
+        cantidad: item.cantidad,
+        precio_unitario: item.categoria.precio
       }))
     };
 
     try {
-      await axios.post('http://localhost:8000/api/pedidos', data, {
+      await axios.post('http://localhost:8000/api/cliente/pedidos', data, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMensaje('Pedido enviado con éxito');

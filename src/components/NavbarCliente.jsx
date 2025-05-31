@@ -35,14 +35,8 @@ function NavbarCliente() {
             <li className="nav-item">
               <Link className="nav-link" to="/cliente/categorias">Prendas</Link>
             </li>
-            {/* <li className="nav-item">
-              <Link className="nav-link" to="/cliente/productos">Productos</Link>
-            </li> */}
             <li className="nav-item">
               <Link className="nav-link" to="/cliente/pagos">Pagos</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/cliente/metodos-pago">Opciones de Pago</Link>
             </li>
           </ul>
           <ul className="navbar-nav">
