@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavbarCliente from '../../components/NavbarCliente';
 import Footer from '../../components/Footer';
-import '../../style/PagosCliente.css'; // Aquí está el CSS que me diste
+import '../../style/PagosCliente.css';
 
 function PagosCliente() {
   const [pagos, setPagos] = useState([]);
@@ -11,7 +11,7 @@ function PagosCliente() {
 
   const [pedidoId, setPedidoId] = useState('');
   const [monto, setMonto] = useState('');
-  const [estado, setEstado] = useState('');
+  const [estado, setEstado] = useState('pendiente'); // estado inicial por defecto
   const [fechaPago, setFechaPago] = useState('');
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -19,7 +19,7 @@ function PagosCliente() {
   const [editandoId, setEditandoId] = useState(null);
   const [editPedidoId, setEditPedidoId] = useState('');
   const [editMonto, setEditMonto] = useState('');
-  const [editEstado, setEditEstado] = useState('');
+  const [editEstado, setEditEstado] = useState('pendiente');
   const [editFechaPago, setEditFechaPago] = useState('');
 
   const [pedidos, setPedidos] = useState([]);
@@ -81,7 +81,7 @@ function PagosCliente() {
       setSuccessMessage('Pago registrado correctamente.');
       setPedidoId('');
       setMonto('');
-      setEstado('');
+      setEstado('pendiente');
       setFechaPago('');
       fetchPagos();
     } catch (err) {
@@ -164,11 +164,10 @@ function PagosCliente() {
 
           <div className="form-group">
             <label>Estado:</label>
-            <input
-              type="text"
-              value={estado}
-              onChange={(e) => setEstado(e.target.value)}
-            />
+            <select value={estado} onChange={(e) => setEstado(e.target.value)}>
+              <option value="pendiente">Pendiente</option>
+              <option value="pagado">Pagado</option>
+            </select>
           </div>
 
           <div className="form-group">
@@ -213,11 +212,10 @@ function PagosCliente() {
                       step="0.01"
                     />
 
-                    <input
-                      type="text"
-                      value={editEstado}
-                      onChange={(e) => setEditEstado(e.target.value)}
-                    />
+                    <select value={editEstado} onChange={(e) => setEditEstado(e.target.value)}>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="pagado">Pagado</option>
+                    </select>
 
                     <input
                       type="datetime-local"
